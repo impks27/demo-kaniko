@@ -1,0 +1,27 @@
+name: Build and Push Docker Image with Kaniko
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Docker config
+        run: |
+          mkdir -p /kaniko/.docker
+          echo "{\"auths\":{\"${{ secrets.DOCKER_REGISTRY }}\":{\"auth\":\"$(echo -n '${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}' | base64)\"}}}" > /kaniko/.docker/config.json
+
+      - name: Build and Push with Kaniko
+        uses: docker://gcr.io/kaniko-project/executor:latest
+        with:
+          args: >
+            --context ${{ github.workspace }}
+            --dockerfile ${{ github.workspace }}/Dockerfile
+            --destination ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPO }}:${{ github.sha }}
+            --cleanup
