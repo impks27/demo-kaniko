@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOCKER_REPO: wfscratchvirtal  # Replace 'my-docker-repo' with your actual repository name
+      DOCKER_REPO: impks #wfscratchvirtal  # Replace 'my-docker-repo' with your actual repository name
       DOCKER_REGISTRY: docker.io # Replace 'my-docker-registry' with your actual registry (e.g., docker.io, ghcr.io)
       IMAGE_NAME: demo-app
       IMAGE_TAG: v1.0.0 
