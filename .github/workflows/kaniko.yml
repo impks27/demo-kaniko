@@ -22,7 +22,7 @@ jobs:
       - name: Create Docker config file
         run: |
           mkdir -p $HOME/.docker
-          echo "{\"auths\":{\"${{ env.DOCKER_REGISTRY }}\":{\"auth\":\"$(echo -n '${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}' | base64)\"}}}" > $HOME/.docker/config.json
+          echo "{\"auths\":{\"${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}\":{\"auth\":\"$(echo -n '${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}' | base64)\"}}}" > $HOME/.docker/config.json
 
       - name: Build and Push with Kaniko
         run: |
