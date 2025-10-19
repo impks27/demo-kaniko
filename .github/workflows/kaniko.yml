@@ -8,6 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_REPO: wfscratchvirtal  # Replace 'my-docker-repo' with your actual repository name
+      DOCKER_REGISTRY: docker.io # Replace 'my-docker-registry' with your actual registry (e.g., docker.io, ghcr.io)
+      IMAGE_NAME: demo-app
+      IMAGE_TAG: v1.0.0 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,7 +21,7 @@ jobs:
       - name: Create Docker config file
         run: |
           mkdir -p $HOME/.docker
-          echo "{\"auths\":{\"${{ secrets.DOCKER_REGISTRY }}\":{\"auth\":\"$(echo -n '${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}' | base64)\"}}}" > $HOME/.docker/config.json
+          echo "{\"auths\":{\"${{ env.DOCKER_REGISTRY }}\":{\"auth\":\"$(echo -n '${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}' | base64)\"}}}" > $HOME/.docker/config.json
 
       - name: Build and Push with Kaniko
         run: |
@@ -25,5 +31,5 @@ jobs:
             gcr.io/kaniko-project/executor:latest \
             --context /workspace \
             --dockerfile /workspace/Dockerfile \
-            --destination ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPO }}:${{ github.sha }} \
+            --destination ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --cleanup
